@@ -1,2 +1,3 @@
 Flask==2.3.3
 psycopg2-binary
+tailwindcss==2.2.19
