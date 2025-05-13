@@ -1,51 +1,43 @@
+import os
 import psycopg2
-from flask import Flask, render_template, request, jsonify
-from collections import defaultdict
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# Dados em memória (simulando um banco de dados)
-rendimentos = defaultdict(float)
-deducoes = defaultdict(lambda: defaultdict(float))
+# Conexão com o banco de dados PostgreSQL
+conn = psycopg2.connect(
+    dbname=os.getenv("DB_NAME"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    host=os.getenv("DB_HOST"),
+    port=os.getenv("DB_PORT", 5432)
+)
+cur = conn.cursor()
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+# Criação da tabela, se não existir
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS rendimentos (
+        id SERIAL PRIMARY KEY,
+        descricao TEXT,
+        valor NUMERIC
+    )
+""")
+conn.commit()
 
-@app.route("/api/rendimentos", methods=["GET", "POST"])
-def handle_rendimentos():
-    if request.method == "POST":
-        data = request.json
-        mes = data["mes"]
-        valor = float(data["valor"])
-        rendimentos[mes] = valor
-        return jsonify(success=True)
-    return jsonify(rendimentos)
+@app.route("/inserir", methods=["POST"])
+def inserir():
+    descricao = request.form["descricao"]
+    valor = request.form["valor"]
+    cur.execute("INSERT INTO rendimentos (descricao, valor) VALUES (%s, %s)", (descricao, valor))
+    conn.commit()
+    return "Inserido!"
 
-@app.route("/api/deducoes", methods=["GET", "POST"])
-def handle_deducoes():
-    if request.method == "POST":
-        data = request.json
-        mes = data["mes"]
-        categoria = data["categoria"]
-        valor = float(data["valor"])
-        deducoes[mes][categoria] = valor
-        return jsonify(success=True)
-    return jsonify({mes: dict(cat) for mes, cat in deducoes.items()})
-
-@app.route("/api/totais")
-def get_totais():
-    totais = {}
-    for mes in rendimentos:
-        bruto = rendimentos[mes]
-        total_deducoes = sum(deducoes[mes].values())
-        liquido = bruto - total_deducoes
-        totais[mes] = {
-            "bruto": bruto,
-            "deducoes": total_deducoes,
-            "liquido": liquido
-        }
-    return jsonify(totais)
+@app.route("/listar")
+def listar():
+    cur.execute("SELECT * FROM rendimentos")
+    dados = cur.fetchall()
+    return jsonify(dados)
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0")
+
