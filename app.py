@@ -24,6 +24,13 @@ cur.execute("""
 """)
 conn.commit()
 
+@app.route("/")
+def home():
+    return """
+    <h1>Bem-vindo ao sistema Carnê-Leão!</h1>
+    <p>Use <code>/listar</code> para ver dados ou envie um POST para <code>/inserir</code>.</p>
+    """
+
 @app.route("/inserir", methods=["POST"])
 def inserir():
     descricao = request.form["descricao"]
