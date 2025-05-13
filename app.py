@@ -1,4 +1,4 @@
-
+import psycopg2
 from flask import Flask, render_template, request, jsonify
 from collections import defaultdict
 
