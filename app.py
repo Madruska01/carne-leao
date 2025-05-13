@@ -41,7 +41,7 @@ conn.commit()
 
 @app.route("/")
 def index():
-    return template("index.html")
+    return render_template("index.html")
 
 @app.route("/inserir", methods=["POST"])
 def inserir():
