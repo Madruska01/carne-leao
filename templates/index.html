@@ -1,108 +1,32 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carnê-Leão - Controle de Aluguéis</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <title>Carnê-Leão</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-800">
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">Carnê-Leão - Controle de Aluguéis</h1>
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Carnê-Leão</h1>
+        </div>
+    </nav>
 
-    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4">Adicionar Rendimento</h2>
-      <div class="flex gap-4">
-        <select id="mes-rendimento" class="border p-2 rounded w-40">
-          <option value="">Selecione o mês</option>
-          <script>
-            const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-            document.write(meses.map(m => `<option value=\"${m}\">${m}</option>`).join(''));
-          </script>
-        </select>
-        <input type="number" id="valor-rendimento" placeholder="Valor bruto" class="border p-2 rounded w-40" />
-        <button onclick="adicionarRendimento()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Adicionar</button>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4">Adicionar Dedução</h2>
-      <div class="flex gap-4 flex-wrap">
-        <select id="mes-deducao" class="border p-2 rounded w-40">
-          <option value="">Selecione o mês</option>
-          <script>
-            document.write(meses.map(m => `<option value=\"${m}\">${m}</option>`).join(''));
-          </script>
-        </select>
-        <input type="text" id="categoria-deducao" placeholder="Categoria (ex: Luz)" class="border p-2 rounded w-40" />
-        <input type="number" id="valor-deducao" placeholder="Valor" class="border p-2 rounded w-40" />
-        <button onclick="adicionarDeducao()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Adicionar</button>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-md p-6">
-      <h2 class="text-xl font-semibold mb-4">Totais por Mês</h2>
-      <table class="table-auto w-full border border-gray-200">
-        <thead class="bg-gray-200">
-          <tr>
-            <th class="px-4 py-2">Mês</th>
-            <th class="px-4 py-2">Bruto</th>
-            <th class="px-4 py-2">Deduções</th>
-            <th class="px-4 py-2">Líquido</th>
-          </tr>
-        </thead>
-        <tbody id="tabela-totais" class="text-center"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <script>
-    async function adicionarRendimento() {
-      const mes = document.getElementById('mes-rendimento').value;
-      const valor = document.getElementById('valor-rendimento').value;
-      if (!mes || !valor) return alert('Preencha todos os campos.');
-
-      await fetch('/api/rendimentos', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ mes, valor })
-      });
-      atualizarTotais();
-    }
-
-    async function adicionarDeducao() {
-      const mes = document.getElementById('mes-deducao').value;
-      const categoria = document.getElementById('categoria-deducao').value;
-      const valor = document.getElementById('valor-deducao').value;
-      if (!mes || !categoria || !valor) return alert('Preencha todos os campos.');
-
-      await fetch('/api/deducoes', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ mes, categoria, valor })
-      });
-      atualizarTotais();
-    }
-
-    async function atualizarTotais() {
-      const res = await fetch('/api/totais');
-      const totais = await res.json();
-      const tbody = document.getElementById('tabela-totais');
-      tbody.innerHTML = '';
-
-      Object.keys(totais).forEach(mes => {
-        const { bruto, deducoes, liquido } = totais[mes];
-        tbody.innerHTML += `
-          <tr>
-            <td class="border px-4 py-2">${mes}</td>
-            <td class="border px-4 py-2">R$ ${bruto.toFixed(2)}</td>
-            <td class="border px-4 py-2">R$ ${deducoes.toFixed(2)}</td>
-            <td class="border px-4 py-2 font-bold">R$ ${liquido.toFixed(2)}</td>
-          </tr>`;
-      });
-    }
-
-    atualizarTotais();
-  </script>
+    <main class="flex flex-col items-center justify-center min-h-screen px-4">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-2xl mt-8">
+            <h2 class="text-xl font-semibold mb-6 text-center">Bem-vindo ao sistema de controle de rendimentos</h2>
+            <div class="grid gap-4">
+                <a href="/receitas" class="block w-full text-center bg-indigo-600 text-white font-medium py-3 rounded-xl hover:bg-indigo-700 transition">
+                    Inserir Receita
+                </a>
+                <a href="/deducoes" class="block w-full text-center bg-indigo-600 text-white font-medium py-3 rounded-xl hover:bg-indigo-700 transition">
+                    Inserir Dedução
+                </a>
+                <a href="/relatorio" class="block w-full text-center bg-indigo-600 text-white font-medium py-3 rounded-xl hover:bg-indigo-700 transition">
+                    Ver Relatório
+                </a>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
