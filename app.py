@@ -28,20 +28,16 @@ cur.execute("""
 """)
 conn.commit()
 
-#@app.route("/")
-#def home():
-    #return """
-        #<h1>🧾 Carnê-Leão</h1>
-        #<p>API ativa!</p>
-        #<ul>
-            #<li><a href='/listar'>/listar</a> – Ver todos os rendimentos</li>
-            #<li>POST para <code>/inserir</code> com os campos <code>descricao</code> e <code>valor</code></li>
-        #</ul>
-    #"""
-
 @app.route("/")
-def index():
-    return render_template("index.html")
+def home():
+    return """
+        <h1>🧾 Carnê-Leão</h1>
+        <p>API ativa!</p>
+        <ul>
+            <li><a href='/listar'>/listar</a> – Ver todos os rendimentos</li>
+            <li>POST para <code>/inserir</code> com os campos <code>descricao</code> e <code>valor</code></li>
+        </ul>
+    """
 
 @app.route("/inserir", methods=["POST"])
 def inserir():
