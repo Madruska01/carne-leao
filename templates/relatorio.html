@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <main class="min-h-screen flex flex-col items-center justify-start px-4 py-10">
+        <div class="w-full max-w-5xl bg-white p-8 rounded-2xl shadow-xl">
+            <h1 class="text-2xl font-bold mb-6 text-center">Relatório de Receita e Dedução</h1>
+
+            <!-- Seção Receita -->
+            <section class="mb-10">
+                <h2 class="text-xl font-semibold mb-4">Receitas</h2>
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-indigo-100 text-gray-800">
+                        <tr>
+                            <th class="px-4 py-2 text-left font-semibold">Descrição</th>
+                            <th class="px-4 py-2 text-left font-semibold">Valor (R$)</th>
+                            <th class="px-4 py-2 text-left font-semibold">Data</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for receita in receitas %}
+                        <tr>
+                            <td class="px-4 py-2">{{ receita.descricao }}</td>
+                            <td class="px-4 py-2">{{ receita.valor }}</td>
+                            <td class="px-4 py-2">{{ receita.data }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Seção Dedução -->
+            <section class="mb-10">
+                <h2 class="text-xl font-semibold mb-4">Deduções</h2>
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-red-100 text-gray-800">
+                        <tr>
+                            <th class="px-4 py-2 text-left font-semibold">Descrição</th>
+                            <th class="px-4 py-2 text-left font-semibold">Valor (R$)</th>
+                            <th class="px-4 py-2 text-left font-semibold">Data</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for deducao in deducoes %}
+                        <tr>
+                            <td class="px-4 py-2">{{ deducao.descricao }}</td>
+                            <td class="px-4 py-2">{{ deducao.valor }}</td>
+                            <td class="px-4 py-2">{{ deducao.data }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Resultado Final -->
+            <div class="mt-8 text-right">
+                <p class="text-lg font-semibold text-gray-700">Total Receitas: R$ {{ total_receitas }}</p>
+                <p class="text-lg font-semibold text-gray-700">Total Deduções: R$ {{ total_deducoes }}</p>
+                <p class="text-xl font-bold text-indigo-600 mt-2">Imposto Devido: R$ {{ imposto }}</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
