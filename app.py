@@ -24,7 +24,6 @@ def close_db(e=None):
         db.close()
 
 # Criar a tabela na primeira requisição
-@app.before_first_request
 def criar_tabela():
     conn = get_db()
     cur = conn.cursor()
