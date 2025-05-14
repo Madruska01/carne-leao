@@ -1,6 +1,6 @@
 import os
 import psycopg2
-from flask import Flask, request, jsonify, g
+from flask import Flask, request, jsonify, render_template g
 
 app = Flask(__name__)
 
@@ -40,14 +40,15 @@ def criar_tabela():
 # Rotas
 @app.route("/")
 def home():
-    return """
-        <h1>🧾 Carnê-Leão</h1>
-        <p>API ativa!</p>
-        <ul>
-            <li><a href='/listar'>/listar</a> – Ver todos os rendimentos</li>
-            <li>POST para <code>/inserir</code> com os campos <code>descricao</code> e <code>valor</code></li>
-        </ul>
-    """
+    return render_template("index.html")
+    #"""
+        #<h1>🧾 Carnê-Leão</h1>
+        #<p>API ativa!</p>
+        #<ul>
+            #<li><a href='/listar'>/listar</a> – Ver todos os rendimentos</li>
+            #<li>POST para <code>/inserir</code> com os campos <code>descricao</code> e <code>valor</code></li>
+        #</ul>
+    #"""
 
 @app.route("/inserir", methods=["POST"])
 def inserir():
